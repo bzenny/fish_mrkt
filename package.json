@@ -4,9 +4,12 @@
   "version": "0.0.1",
   "packageManager": "pnpm@10.0.0",
   "scripts": {
-    "test": "vitest run --passWithNoTests",
-    "typecheck": "tsc --noEmit",
-    "build": "tsc --noEmit"
+    "dev": "pnpm --filter @fishmrkt/web dev",
+    "build": "pnpm --filter @fishmrkt/web build",
+    "typecheck": "tsc --noEmit && pnpm --filter @fishmrkt/web typecheck",
+    "test": "vitest run",
+    "db:generate": "pnpm --filter @fishmrkt/database db:generate",
+    "db:migrate": "pnpm --filter @fishmrkt/database db:migrate"
   },
   "devDependencies": {
     "typescript": "^5.9.0",
