@@ -1,0 +1,13 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: fishmrkt
+      POSTGRES_PASSWORD: local_dev_only
+      POSTGRES_DB: fishmrkt
+    ports:
+      - "5432:5432"
+    volumes:
+      - fishmrkt_db:/var/lib/postgresql/data
+volumes:
+  fishmrkt_db:
