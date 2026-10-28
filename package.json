@@ -1,0 +1,16 @@
+{
+  "name": "fishmrkt",
+  "private": true,
+  "version": "0.0.1",
+  "packageManager": "pnpm@10.0.0",
+  "scripts": {
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0",
+    "@types/node": "^22.0.0"
+  }
+}
