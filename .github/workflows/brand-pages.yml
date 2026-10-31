@@ -1,0 +1,37 @@
+name: Deploy FI$Hmrkt Brand Guide to GitHub Pages
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/brand/**'
+      - '.github/workflows/brand-pages.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: brand-pages
+  cancel-in-progress: true
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Validate static brand assets
+        run: |
+          test -s docs/brand/index.html
+          test -s docs/brand/assets/fishmrkt-dual-color.svg
+      - name: Upload static website
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/brand
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
