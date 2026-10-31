@@ -1,0 +1,39 @@
+name: Brand quality checks
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/brand/**'
+      - 'packages/brand/**'
+      - '.github/workflows/brand-quality.yml'
+  pull_request:
+    paths:
+      - 'docs/brand/**'
+      - 'packages/brand/**'
+      - '.github/workflows/brand-quality.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify assets and palette
+        run: |
+          test -s docs/brand/index.html
+          test -s docs/brand/assets/fishmrkt-dual-color.svg
+          node -e "const t=require('./packages/brand/tokens.json');if(!t.colors.navy||!t.colors.gold)process.exit(1)"
+      - name: Serve static brand site
+        run: |
+          python3 -m http.server 8080 --directory docs/brand > /tmp/brand-server.log 2>&1 &
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8080/ >/dev/null && exit 0; sleep 1; done
+          exit 1
+      - name: Lighthouse performance and accessibility
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            http://127.0.0.1:8080/
+          configPath: ./docs/brand/lighthouserc.json
+          uploadArtifacts: true
+          temporaryPublicStorage: false
